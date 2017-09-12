@@ -1,30 +1,28 @@
 'use strict';
 
 const Hapi = require('hapi');
+const Inert = require('inert');
+const HRL = require('hapi-routes-loader');
 
 const server = new Hapi.Server();
-server.connection({ port: 3000, host: 'localhost' });
 
-server.route({
-    method: 'GET',
-    path: '/',
-    handler: function (request, reply) {
-        reply('Hello, world!');
-    }
+server.connection({
+    port: 8000
 });
 
-server.route({
-    method: 'GET',
-    path: '/{name}',
-    handler: function (request, reply) {
-        reply('Hello, ' + encodeURIComponent(request.params.name) + '!');
+server.register([
+    Inert,
+    {
+        register: HRL,
+        options: {
+            dirname: __dirname, //must be a string with a root path
+            pathRoutes: '/app/routes'
+        }
     }
-});
 
-server.start((err) => {
+], (err) => {
 
-    if (err) {
-        throw err;
-    }
-    console.log(`Server running at: ${server.info.uri}`);
+    server.start((err) => {
+        console.log('Running web app at: ' + server.uri);
+    });
 });
