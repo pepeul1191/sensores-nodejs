@@ -10,9 +10,9 @@ def mandar
         data_json_string = line
         arreglo_sensores.push(data_json_string)
     end
-    puts "1+++++++++++++++++++++++++++++++++++++++"
-    puts arreglo_sensores.size
-    puts "2+++++++++++++++++++++++++++++++++++++++"
+    #puts "1+++++++++++++++++++++++++++++++++++++++"
+    #puts arreglo_sensores.size
+    #puts "2+++++++++++++++++++++++++++++++++++++++"
     RSpec.describe App do
         describe "1. Mandar dato de un sensor: " do
             arreglo_sensores.each do |sensor|
@@ -51,4 +51,4 @@ def listar
 end
 
 mandar
-listar
+#listar

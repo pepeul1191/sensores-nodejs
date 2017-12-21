@@ -1,4 +1,4 @@
 var EJDB = require('ejdb');
-var jb = EJDB.open('db/zoo', EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+var jb = EJDB.open('db/quinua', EJDB.DEFAULT_OPEN_MODE);
 
 exports.conn = jb;
