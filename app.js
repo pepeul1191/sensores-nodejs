@@ -6,7 +6,7 @@ const HRL = require('hapi-routes-loader');
 const server = new Hapi.Server();
 
 server.connection({
-  port: 8000
+  port: 3035
 });
 
 server.register([
