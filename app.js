@@ -6,20 +6,20 @@ const HRL = require('hapi-routes-loader');
 const server = new Hapi.Server();
 
 server.connection({
-    port: 8000
+  port: 8000
 });
 
 server.register([
-    Inert,
-    {
-        register: HRL,
-        options: {
-            dirname: __dirname, //must be a string with a root path
-            pathRoutes: '/routes'
-        }
+  Inert,
+  {
+    register: HRL,
+    options: {
+      dirname: __dirname, //must be a string with a root path
+      pathRoutes: '/routes'
     }
+  }
 ], (err) => {
-    server.start((err) => {
-        console.log('Running web app at: ' + server.uri);
-    });
+  server.start((err) => {
+    console.log('Running web app at: ' + server.uri);
+  });
 });
