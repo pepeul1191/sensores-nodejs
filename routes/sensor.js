@@ -29,14 +29,40 @@ module.exports = [
       auth: false
     },
     handler: function (request, reply) {
-      db.conn.find('sensores',
-        function(err, cursor, count) {
-          if (err) {
-            //console.error(err);
-            reply(err);
-            return;
-          }
-          reply(count);
+      db.conn.find('sensores', function(err, cursor, count) {
+        if (err) {
+          //console.error(err);
+          reply(err);
+          return;
+        }
+        var rs = [];
+        while (cursor.next()) {
+          //console.log(cursor.field('estacion_id'));
+          var data = {
+            'estacion_id' : cursor.field('estacion_id'),
+            'momento' : cursor.field('momento'),
+            'datos' : cursor.field('datos'), 
+          };
+          rs.push(data);
+        }
+        reply(rs);
+      });
+    }
+  },
+  {
+  method: 'GET',
+    path: 'count',
+    config: {
+      auth: false
+    },
+    handler: function (request, reply) {
+      db.conn.find('sensores', function(err, cursor, count) {
+        if (err) {
+          //console.error(err);
+          reply(err);
+          return;
+        }
+        reply(count);
       });
     }
   },

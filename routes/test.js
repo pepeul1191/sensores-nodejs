@@ -1,5 +1,7 @@
 'use strict';
 
+var db = require('../config/database');
+
 module.exports = [
   {
     method: 'GET',
@@ -32,4 +34,69 @@ module.exports = [
       reply(date + ' - ' + time);
     }
   },
+  {
+    method: 'GET',
+    path: 'save',
+    config: {
+      auth: false
+    },
+    handler: function (request, reply) {
+      /*
+        FORMATO DE DATO  
+        {
+          'estacion_id':n,
+          'momento':Date,
+          'datos':[
+            {'sensor_id':n,'dato':d},
+            {'sensor_id':n,'dato':d},
+            {'sensor_id':n,'dato':d},
+          ]
+        }
+      */
+      var end = new Date("December 31, 2017 23:59:59");
+      var start = new Date("January 1, 2015 01:00:01");
+      var estacionces = [1,2,3,4,5];
+      var sensores = [
+        [1,4,7,10],//sensores de la estacion id=1
+        [2,5,8,11],//sensores de la estacion id=2
+        [3,6,9,12],//sensores de la estacion id=3
+        [13,15,17,19],//sensores de la estacion id=4
+        [14,16,18,20],//sensores de la estacion id=5
+      ];
+      for(var k = 0; k < 20; k++){
+        var datetime_random = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        var estacion_id_random = estacionces[Math.floor(Math.random() * estacionces.length)];
+        var random_sensor = Math.floor(Math.random() * (3 + 1));
+        var data = {
+          'estacion_id' : estacion_id_random,
+          'momento' : datetime_random,
+          'datos' : [
+            {
+              'sensor_id' : sensores[estacion_id_random - 1][0],
+              'dato' : Math.floor(Math.random() * (40-15 + 1) + 15)
+            }, 
+            {
+              'sensor_id' : sensores[estacion_id_random - 1][1],
+              'dato' : Math.floor(Math.random() * (40-15 + 1) + 15)}, 
+            {
+              'sensor_id' : sensores[estacion_id_random - 1][2],
+              'dato' : Math.floor(Math.random() * (40-15 + 1) + 15)
+            }, 
+            {
+              'sensor_id' : sensores[estacion_id_random - 1][3],
+              'dato' : Math.floor(Math.random() * (40-15 + 1) + 15)
+            }, 
+          ]
+        };
+        //console.log(data);
+        db.conn.save('sensores', [data], function(err, oids) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
+      }
+      reply('ok');
+    }
+  }
 ];
