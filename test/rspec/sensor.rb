@@ -4,29 +4,41 @@ require_relative 'app'
 require 'json'
 
 def mandar
-    file = File.new("data/sensor.txt", "r")
-    arreglo_sensores = []
-    while (line = file.gets)
-        data_json_string = line
-        arreglo_sensores.push(data_json_string)
-    end
-    #puts "1+++++++++++++++++++++++++++++++++++++++"
-    #puts arreglo_sensores.size
-    #puts "2+++++++++++++++++++++++++++++++++++++++"
+    """
+    FORMATO DE DATO DE ENTRADA
+        {
+          'estacion_id':n,
+          'momento':Date,
+          'datos':[
+            {'sensor_id':n,'dato':d},
+            {'sensor_id':n,'dato':d},
+            {'sensor_id':n,'dato':d},
+          ]
+        }
+    """
+    data = {
+        'estacion_id' => 2,
+        'momento' => DateTime.now,
+        'datos' => [
+          {'sensor_id' => 1,'dato' => 10},
+          {'sensor_id' => 2,'dato' => 20},
+          {'sensor_id' => 3,'dato' => 30},
+        ]
+      }
+    #puts data
     RSpec.describe App do
         describe "1. Mandar dato de un sensor: " do
-            arreglo_sensores.each do |sensor|
-                it '1.1 Conexión con backend-sensores' do
-                  test =App.new('')
-                  test.servicios('backend', 'test/conexion')
-                  expect(test.response.code).to eq(200)
-                end
-                it '1.2 Guardar dato del sensor en base de datos' do
-                  url = 'sensor/grabar?data='+sensor
-                  test = App.new(url)
-                  test.post()
-                  expect(test.response.code).to eq(200)
-                end
+            it '1.1 Conexión con backend-sensores' do
+                test =App.new('')
+                test.servicios('backend', 'test/conexion')
+                expect(test.response.code).to eq(200)
+            end
+            it '1.2 Guardar dato del sensor en base de datos' do
+                url = 'sensor/grabar?data=' + data.to_json
+                test = App.new(url)
+                test.post()
+                puts test.response.body
+                expect(test.response.code).to eq(200)
             end
         end
     end
