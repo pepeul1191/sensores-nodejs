@@ -3,3 +3,5 @@ package-lock.json
 /public/bower_components
 /public/dist
 Gemfile.lock
+/db/quinua
+/db/quinua_sensores

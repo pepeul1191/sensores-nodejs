@@ -41,7 +41,8 @@ module.exports = [
           var data = {
             'estacion_id' : cursor.field('estacion_id'),
             'momento' : cursor.field('momento'),
-            'datos' : cursor.field('datos'), 
+            'sensor_id' : cursor.field('sensor_id'), 
+            'dato' : cursor.field('dato'), 
           };
           rs.push(data);
         }

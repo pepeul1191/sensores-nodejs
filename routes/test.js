@@ -42,7 +42,7 @@ module.exports = [
     },
     handler: function (request, reply) {
       /*
-        FORMATO DE DATO  
+        FORMATO DE DATO DE ENTRADA
         {
           'estacion_id':n,
           'momento':Date,
@@ -51,6 +51,14 @@ module.exports = [
             {'sensor_id':n,'dato':d},
             {'sensor_id':n,'dato':d},
           ]
+        }
+        ---
+        FORMATO DE DATO GRABADO
+        {
+          'estacion_id':n,
+          'momento':Date,
+          'sensor_id':n,
+          'dato':d
         }
       */
       var end = new Date("December 31, 2017 23:59:59");
@@ -63,7 +71,7 @@ module.exports = [
         [13,15,17,19],//sensores de la estacion id=4
         [14,16,18,20],//sensores de la estacion id=5
       ];
-      for(var k = 0; k < 20; k++){
+      for(var k = 0; k < 2000; k++){
         var datetime_random = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
         var estacion_id_random = estacionces[Math.floor(Math.random() * estacionces.length)];
         var random_sensor = Math.floor(Math.random() * (3 + 1));
@@ -89,12 +97,22 @@ module.exports = [
           ]
         };
         //console.log(data);
-        db.conn.save('sensores', [data], function(err, oids) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        });
+        var estacion_id = data['estacion_id'];
+        var momento = data['momento'];
+        for(var i = 0; i < data['datos'].length; i++){
+          var data_sensor = {
+            'estacion_id' : estacion_id_random,
+            'momento' : datetime_random,
+            'sensor_id' : data['datos'][i]['sensor_id'],
+            'dato' : data['datos'][i]['dato'],
+          };
+          db.conn.save('sensores', [data_sensor], function(err, oids) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+          });
+        }
       }
       reply('ok');
     }
