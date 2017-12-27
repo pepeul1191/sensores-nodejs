@@ -13,13 +13,32 @@ module.exports = [
       var data = JSON.parse(request.query.data); //producción
       //var data = JSON.parse(request.payload.data); //jmeter
       //console.log(data);
-      db.conn.save('sensores', [data], function(err, oids) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        reply('ok');
-      });
+      var ids_generados = [];
+      var id_generado = null;
+      /*
+      for(var i = 0; i < data['datos'].length; i++){
+        var data_sensor = {
+          'estacion_id' : data['estacion_id'],
+          'momento' : data['momento'],
+          'sensor_id' : data['datos'][i]['sensor_id'],
+          'dato' : data['datos'][i]['dato'],
+        };
+
+      }
+      */
+      (function next(){
+        if (!data['datos'].length) return callback(null, ids_generados);
+        var uid = uids.pop()
+        db.conn.save('sensores', [data_sensor], function(err, oids) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          ids_generados.push(oids[0]);
+          next();
+        });
+      })();
+      reply(ids_generados);
     }
   },
   {
@@ -42,6 +61,7 @@ module.exports = [
             'estacion_id' : cursor.field('estacion_id'),
             'momento' : cursor.field('momento'),
             'sensor_id' : cursor.field('sensor_id'), 
+            'veritas' : cursor.field('veritas'), 
             'dato' : cursor.field('dato'), 
           };
           rs.push(data);

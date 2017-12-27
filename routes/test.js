@@ -62,7 +62,7 @@ module.exports = [
         }
       */
       var end = new Date("December 31, 2017 23:59:59");
-      var start = new Date("January 1, 2015 01:00:01");
+      var start = new Date("December 1, 2017 01:00:01");
       var estacionces = [1,2,3,4,5];
       var sensores = [
         [1,4,7,10],//sensores de la estacion id=1
@@ -73,6 +73,7 @@ module.exports = [
       ];
       for(var k = 0; k < 2000; k++){
         var datetime_random = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        datetime_random = Date.parse(datetime_random)
         var estacion_id_random = estacionces[Math.floor(Math.random() * estacionces.length)];
         var random_sensor = Math.floor(Math.random() * (3 + 1));
         var data = {
@@ -103,6 +104,7 @@ module.exports = [
           var data_sensor = {
             'estacion_id' : estacion_id_random,
             'momento' : datetime_random,
+            'veritas': new Date(datetime_random),
             'sensor_id' : data['datos'][i]['sensor_id'],
             'dato' : data['datos'][i]['dato'],
           };

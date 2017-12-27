@@ -32,6 +32,17 @@ Instlación de software y dependencias. Adicionalmente hay que tener instalado N
 
     ejdb> db.find('colección');
 
+### Reportes
+
++ Datos durante todo un día.
++ Máximo, minimo y promedio entre un rango de días.
+
+### Javascript Date
+
+The 7 numbers specify the year, month, day, hour, minute, second, and millisecond, in that order:
+
+    var d = new Date(99, 5, 24, 11, 33, 30, 0);
+
 ---
 
 Fuentes:
@@ -40,3 +51,5 @@ Fuentes:
 + http://ejdb.org/doc/install/ubuntu.html
 + https://github.com/Softmotions/ejdb-ruby
 + http://ejdb.org/doc/cli.html
++ https://stackoverflow.com/questions/7653080/adding-to-an-array-asynchronously-in-node-js
++ https://www.w3schools.com/js/js_dates.asp
