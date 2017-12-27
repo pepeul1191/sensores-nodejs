@@ -32,6 +32,15 @@ Instlación de software y dependencias. Adicionalmente hay que tener instalado N
 
     ejdb> db.find('colección');
 
+### Formato de Dato Grabado
+
+    {
+        'estacion_id':n,
+        'momento':Date,
+        'sensor_id':n,
+        'dato':d
+    }
+
 ### Reportes
 
 + Datos durante todo un día.

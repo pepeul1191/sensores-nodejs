@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^3.0.2",
     "ejdb": "^1.2.12-42",
     "hapi": "^16.5.2",
     "hapi-routes-loader": "^0.2.0",
