@@ -28,7 +28,7 @@ module.exports = [
       var fecha_busqueda_inicio = Date.parse(new Date(anio, mes, dia, 0,0,0,0)); 
       var fecha_busqueda_fin = Date.parse(new Date(anio, mes, dia, 23,59,59,999));  
       //console.log(fecha_busqueda_inicio);
-      db.conn.find('sensores', {'sensor_id' : sensor_id, 'momento' : {$bt : [fecha_busqueda_inicio, fecha_busqueda_fin]}}, function(err, cursor, count) {
+      db.conn.find('sensores', {'sensor_id' : sensor_id, 'momento' : {$bt : [fecha_busqueda_inicio, fecha_busqueda_fin]}}, {$orderby: {momento : 1}}, function(err, cursor, count) {
         //console.log(count);
         var rs = [];
         while (cursor.next()) {
