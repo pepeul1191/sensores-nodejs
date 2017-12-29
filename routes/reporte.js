@@ -27,7 +27,7 @@ module.exports = [
       //console.log(fecha_busqueda_inicio);
       db.conn.find('sensores', {'sensor_id' : sensor_id, 'momento' : {$bt : [fecha_busqueda_inicio, fecha_busqueda_fin]}}, {$orderby: {momento : 1}}, function(err, cursor, count) {
         //console.log(count);
-        var rs = new Object();
+        var rs = new Array();
         while (cursor.next()) {
           var data = {
             'estacion_id' : cursor.field('estacion_id'),
@@ -74,15 +74,19 @@ module.exports = [
               //console.log('IF');
               var dato = cursor.field('dato');
               var max_val = rs_temp[day]['max'];
+              var max_date = rs_temp[day]['max_date'];
               var min_val = rs_temp[day]['min'];
+              var min_date = rs_temp[day]['min_date'];
               var avg_temp = rs_temp[day]['avg_temp'];
               var cantidad_val = rs_temp[day]['cantidad'] + 1;
-              if(dato > max_val){max_val = dato}
-              if(dato < min_val){min_val = dato}
+              if(dato > max_val){max_val = dato; max_date = new Date(cursor.field('momento'));}
+              if(dato < min_val){min_val = dato; min_date = new Date(cursor.field('momento'));}
               //console.log('max_val : ' + max_val);console.log('min_val : ' + min_val);console.log('avg_temp : ' + avg_temp);
               avg_temp.push(dato);
               rs_temp[day] = {
                 'max': max_val,
+                'max_date': max_date,
+                'min_date': min_date,
                 'min': min_val,
                 'avg_temp': avg_temp,
                 'cantidad' : cantidad_val
@@ -91,7 +95,9 @@ module.exports = [
               //console.log('ELSE');
               rs_temp[day] = {
                 'max': cursor.field('dato'),
+                'max_date': date,
                 'min': cursor.field('dato'),
+                'min_date': date,
                 'avg_temp': [cursor.field('dato')],
                 'cantidad': 1
               }
@@ -104,9 +110,12 @@ module.exports = [
             var sum = rs_temp[key]['avg_temp'].reduce((previous, current) => current += previous);
             var avg = sum / rs_temp[key]['cantidad'];
             rs[key] = {
-              'max': rs_temp[key]['max'], 
+              'max': rs_temp[key]['max'],
+              'max_date': rs_temp[key]['max_date'],  
               'min': rs_temp[key]['min'], 
-              'avg': avg,  
+              'min_date': rs_temp[key]['min_date'], 
+              'avg': avg,
+              'n': rs_temp[key]['cantidad']
             }
           }
           reply(rs);
