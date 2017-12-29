@@ -3,6 +3,10 @@
 var db = require('../config/database');
 var dateFormat = require('dateformat');
 
+var toType = function(obj) {
+  return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+}
+
 module.exports = [
   {
   method: 'GET',
@@ -10,6 +14,7 @@ module.exports = [
     config: {
       auth: false
     },
+    //http://localhost:3035/reporte/datos_dia?sensor_id=7&dia=2017.12.26
     handler: function (request, reply) {
       var sensor_id = parseInt(request.query.sensor_id);
       var fecha_inicio = request.query.dia;
@@ -22,7 +27,7 @@ module.exports = [
       //console.log(fecha_busqueda_inicio);
       db.conn.find('sensores', {'sensor_id' : sensor_id, 'momento' : {$bt : [fecha_busqueda_inicio, fecha_busqueda_fin]}}, {$orderby: {momento : 1}}, function(err, cursor, count) {
         //console.log(count);
-        var rs = [];
+        var rs = new Object();
         while (cursor.next()) {
           var data = {
             'estacion_id' : cursor.field('estacion_id'),
@@ -43,6 +48,7 @@ module.exports = [
       config: {
         auth: false
       },
+      //http://localhost:3035/reporte/max_min_avg_dias?sensor_id=7&inicio=2017.12.26&fin=2017.12.28
       handler: function (request, reply) {
         var sensor_id = parseInt(request.query.sensor_id);
         var fecha_inicio = request.query.inicio;
@@ -61,7 +67,6 @@ module.exports = [
         db.conn.find('sensores', {'sensor_id' : sensor_id, 'momento' : {$bt : [fecha_busqueda_inicio, fecha_busqueda_fin]}}, {$orderby: {momento : 1}}, function(err, cursor, count) {
           //console.log(count);
           var rs_temp = [];
-          var rs = [];
           while (cursor.next()) {
             var date = new Date(cursor.field('momento'));
             var day = dateFormat(date, "yyyy-mm-dd");
@@ -93,18 +98,18 @@ module.exports = [
               //console.log(rs_temp)
             }
           }
+          var rs = new Object();
           for (var key in rs_temp) {
+            //console.log(rs_temp[key]['avg_temp']);
             var sum = rs_temp[key]['avg_temp'].reduce((previous, current) => current += previous);
             var avg = sum / rs_temp[key]['cantidad'];
             rs[key] = {
               'max': rs_temp[key]['max'], 
-              'min': rs_temp[key]['max'], 
+              'min': rs_temp[key]['min'], 
               'avg': avg,  
             }
           }
-          console.log(rs);
           reply(rs);
-          return;
         });
       },
     }
