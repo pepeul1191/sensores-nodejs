@@ -99,6 +99,7 @@ module.exports = [
         };
         //console.log(data);
         var estacion_id = data['estacion_id'];
+        var creados = 0;
         var momento = data['momento'];
         for(var i = 0; i < data['datos'].length; i++){
           var data_sensor = {
@@ -108,6 +109,7 @@ module.exports = [
             'sensor_id' : data['datos'][i]['sensor_id'],
             'dato' : data['datos'][i]['dato'],
           };
+          creados = creados + 1;
           db.conn.save('sensores', [data_sensor], function(err, oids) {
             if (err) {
               console.error(err);
@@ -116,7 +118,7 @@ module.exports = [
           });
         }
       }
-      reply('ok');
+      reply('Cantidad de registros creados : ' + creados);
     }
   }
 ];
